@@ -127,7 +127,14 @@ def build_banner():
     word_x = mark_x + mark + 30.0
     width = word_x + word_w + 14.0 + tail_w + mark_x
     height = 120.0
-    baseline = 80.0
+    # centre the wordmark's ink on the mark's vertical centre, not on the
+    # baseline (which would leave the lockup looking bottom-heavy)
+    s = size / bold["upem"]
+    word_box = bounds(bold, "haaku")
+    tail_box_v = bounds(med, ".tv")
+    ink_top = max(word_box[3], tail_box_v[3])
+    ink_bottom = min(word_box[1], tail_box_v[1])
+    baseline = mark_y + mark / 2 + (ink_top + ink_bottom) * s / 2
     hb = centered_h(bold, mark * 0.6, mark / 2, mark / 2)
     return f"""<svg xmlns="http://www.w3.org/2000/svg" width="{width:.0f}" height="{height:.0f}" viewBox="0 0 {width:.0f} {height:.0f}" role="img" aria-label="haaku.tv">
   <defs>
